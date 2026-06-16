@@ -44,10 +44,10 @@ export default function LedgerTab({ me, isEditor }) {
 
   return (
     <div className="space-y-5">
-      <section className="rounded-2xl border border-line bg-ink p-5 text-paper shadow-soft">
-        <p className="font-mono text-xs uppercase tracking-[0.2em] text-marquee">balance</p>
+      <section className="rounded-2xl bg-brand p-5 text-white shadow-soft">
+        <p className="font-mono text-xs uppercase tracking-[0.2em] text-white/70">balance</p>
         <p className="mt-1 text-3xl font-bold tracking-tight">{won(balance)}<span className="ml-1 text-lg">원</span></p>
-        <div className="mt-3 flex gap-4 text-xs text-white/60">
+        <div className="mt-3 flex gap-4 text-xs text-white/80">
           <span>입금 {won(income)}</span>
           <span>지출 {won(expense)}</span>
         </div>
@@ -57,15 +57,15 @@ export default function LedgerTab({ me, isEditor }) {
         <section className="rounded-2xl border border-line bg-card p-4 shadow-soft">
           <div className="flex gap-2">
             {['입금', '지출'].map((t) => (
-              <button key={t} onClick={() => setForm({ ...form, type: t })} className={`flex-1 rounded-lg py-2 text-sm font-medium transition ${form.type === t ? (t === '입금' ? 'bg-plus/10 text-plus' : 'bg-minus/10 text-minus') : 'bg-paper text-muted'}`}>{t}</button>
+              <button key={t} onClick={() => setForm({ ...form, type: t })} className={`flex-1 rounded-lg py-2 text-sm font-medium transition ${form.type === t ? (t === '입금' ? 'bg-plus/10 text-plus' : 'bg-minus/10 text-minus') : 'bg-sky text-muted'}`}>{t}</button>
             ))}
           </div>
           <div className="mt-2 space-y-2">
-            <input inputMode="numeric" value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} placeholder="금액" className="w-full rounded-lg border border-line px-3 py-2 text-sm outline-none focus:border-marquee" />
-            <input value={form.memo} onChange={(e) => setForm({ ...form, memo: e.target.value })} placeholder="내용 (예: 6월 회비 / 식비)" className="w-full rounded-lg border border-line px-3 py-2 text-sm outline-none focus:border-marquee" />
-            <input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} className="w-full rounded-lg border border-line px-3 py-2 text-sm text-ink outline-none focus:border-marquee" />
+            <input inputMode="numeric" value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} placeholder="금액" className="w-full rounded-lg border border-line px-3 py-2 text-sm outline-none focus:border-brand" />
+            <input value={form.memo} onChange={(e) => setForm({ ...form, memo: e.target.value })} placeholder="내용 (예: 6월 회비 / 식비)" className="w-full rounded-lg border border-line px-3 py-2 text-sm outline-none focus:border-brand" />
+            <input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} className="w-full rounded-lg border border-line px-3 py-2 text-sm text-ink outline-none focus:border-brand" />
             <div className="flex gap-2">
-              <button onClick={save} className="flex-1 rounded-lg bg-marquee py-2 text-sm font-semibold text-ink">{editId ? '수정 저장' : '내역 추가'}</button>
+              <button onClick={save} className="flex-1 rounded-lg bg-brand py-2 text-sm font-semibold text-white">{editId ? '수정 저장' : '내역 추가'}</button>
               {editId && <button onClick={() => { setEditId(null); setForm({ type: '지출', amount: '', memo: '', date: todayIso() }) }} className="rounded-lg border border-line px-3 text-sm text-muted">취소</button>}
             </div>
           </div>

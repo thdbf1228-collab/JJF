@@ -21,9 +21,7 @@ export default function RulesTab({ me }) {
   async function toggleMine() {
     const next = !(consent[me]?.agreed)
     await supabase.from('rules_consent').upsert({
-      member: me,
-      agreed: next,
-      agreed_at: next ? new Date().toISOString() : null,
+      member: me, agreed: next, agreed_at: next ? new Date().toISOString() : null,
     })
     load()
   }
@@ -48,20 +46,16 @@ export default function RulesTab({ me }) {
             const isMe = m === me
             return (
               <li key={m} className="flex items-center justify-between py-2.5">
-                <span className={`text-sm ${isMe ? 'font-semibold text-ink' : 'text-ink/80'}`}>
-                  {m}{isMe && ' (나)'}
-                </span>
+                <span className={`text-sm ${isMe ? 'font-semibold text-ink' : 'text-ink/80'}`}>{m}{isMe && ' (나)'}</span>
                 {isMe ? (
                   <button
                     onClick={toggleMine}
-                    className={`rounded-lg px-3 py-1.5 text-xs font-medium transition ${c?.agreed ? 'bg-plus/10 text-plus' : 'bg-marquee text-ink'}`}
+                    className={`rounded-lg px-3 py-1.5 text-xs font-medium transition ${c?.agreed ? 'bg-plus/10 text-plus' : 'bg-brand text-white'}`}
                   >
                     {c?.agreed ? '동의함 · 취소' : '확인했어요'}
                   </button>
                 ) : (
-                  <span className={`text-xs ${c?.agreed ? 'text-plus' : 'text-muted'}`}>
-                    {c?.agreed ? '동의' : '대기'}
-                  </span>
+                  <span className={`text-xs ${c?.agreed ? 'text-plus' : 'text-muted'}`}>{c?.agreed ? '동의' : '대기'}</span>
                 )}
               </li>
             )

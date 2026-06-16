@@ -4,21 +4,22 @@ export default {
   theme: {
     extend: {
       colors: {
-        ink: '#1A1714',
-        paper: '#FBF8F2',
-        card: '#FFFFFF',
-        line: '#EAE3D7',
-        muted: '#8C8377',
-        marquee: '#E0A82E',
-        plus: '#2E7D5B',
-        minus: '#C2492E',
+        ink:   '#1E293B',  // 진한 슬레이트(텍스트)
+        paper: '#F4F9FF',  // 페이지 배경(연블루 화이트)
+        card:  '#FFFFFF',
+        line:  '#E3ECF7',  // 연블루 보더
+        muted: '#64748B',
+        brand: '#2E7BEE',  // 메인 블루
+        sky:   '#E8F1FE',  // 연블루 면(칩/호버)
+        plus:  '#16A34A',  // 입금
+        minus: '#DC2626',  // 지출
       },
       fontFamily: {
         sans: ['Pretendard', 'system-ui', 'sans-serif'],
         mono: ['"DM Mono"', 'ui-monospace', 'monospace'],
       },
       boxShadow: {
-        soft: '0 1px 2px rgba(26,23,20,.04), 0 8px 24px rgba(26,23,20,.06)',
+        soft: '0 1px 2px rgba(30,41,59,.04), 0 8px 24px rgba(46,123,238,.06)',
       },
     },
   },

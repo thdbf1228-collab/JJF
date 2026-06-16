@@ -5,8 +5,8 @@
 html, body, #root { height: 100%; }
 body {
   margin: 0;
-  background: #1A1714;
-  color: #1A1714;
+  background: #F4F9FF;
+  color: #1E293B;
   -webkit-font-smoothing: antialiased;
 }
 * { -webkit-tap-highlight-color: transparent; }

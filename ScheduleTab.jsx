@@ -75,10 +75,10 @@ export default function ScheduleTab({ me, isEditor }) {
               <button
                 key={i}
                 onClick={() => { setSelected(cell); setEditId(null); setForm({ title: '', memo: '' }) }}
-                className={`relative aspect-square rounded-lg text-sm transition ${on ? 'bg-ink text-paper' : isToday ? 'bg-paper text-ink' : 'text-ink/80 hover:bg-paper'}`}
+                className={`relative aspect-square rounded-lg text-sm transition ${on ? 'bg-brand text-white' : isToday ? 'bg-sky text-ink' : 'text-ink/80 hover:bg-sky'}`}
               >
                 {Number(cell.slice(8))}
-                {has && <span className="absolute bottom-1 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-marquee" />}
+                {has && <span className={`absolute bottom-1 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full ${on ? 'bg-white' : 'bg-brand'}`} />}
               </button>
             )
           })}
@@ -90,7 +90,7 @@ export default function ScheduleTab({ me, isEditor }) {
         <ul className="mt-2 space-y-2">
           {dayEvents.length === 0 && <li className="text-sm text-muted">등록된 일정이 없어요.</li>}
           {dayEvents.map((e) => (
-            <li key={e.id} className="flex items-start justify-between gap-2 rounded-lg bg-paper p-3">
+            <li key={e.id} className="flex items-start justify-between gap-2 rounded-lg bg-sky p-3">
               <div>
                 <p className="text-sm font-medium text-ink">{e.title}</p>
                 {e.memo && <p className="text-xs text-muted">{e.memo}</p>}
@@ -108,10 +108,10 @@ export default function ScheduleTab({ me, isEditor }) {
 
         {isEditor ? (
           <div className="mt-3 space-y-2 border-t border-line pt-3">
-            <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="제목 (예: 6월 정기모임)" className="w-full rounded-lg border border-line px-3 py-2 text-sm outline-none focus:border-marquee" />
-            <input value={form.memo} onChange={(e) => setForm({ ...form, memo: e.target.value })} placeholder="메모 (장소·시간 등, 선택)" className="w-full rounded-lg border border-line px-3 py-2 text-sm outline-none focus:border-marquee" />
+            <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="제목 (예: 6월 정기모임)" className="w-full rounded-lg border border-line px-3 py-2 text-sm outline-none focus:border-brand" />
+            <input value={form.memo} onChange={(e) => setForm({ ...form, memo: e.target.value })} placeholder="메모 (장소·시간 등, 선택)" className="w-full rounded-lg border border-line px-3 py-2 text-sm outline-none focus:border-brand" />
             <div className="flex gap-2">
-              <button onClick={save} className="flex-1 rounded-lg bg-marquee py-2 text-sm font-semibold text-ink">{editId ? '수정 저장' : '일정 추가'}</button>
+              <button onClick={save} className="flex-1 rounded-lg bg-brand py-2 text-sm font-semibold text-white">{editId ? '수정 저장' : '일정 추가'}</button>
               {editId && <button onClick={() => { setEditId(null); setForm({ title: '', memo: '' }) }} className="rounded-lg border border-line px-3 text-sm text-muted">취소</button>}
             </div>
           </div>

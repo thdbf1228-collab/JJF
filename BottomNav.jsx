@@ -8,9 +8,9 @@ export default function BottomNav({ tabs, active, onChange }) {
             <button
               key={t.id}
               onClick={() => onChange(t.id)}
-              className={`relative py-3 text-sm transition ${on ? 'text-ink font-semibold' : 'text-muted'}`}
+              className={`relative py-3 text-sm transition ${on ? 'text-brand font-semibold' : 'text-muted'}`}
             >
-              {on && <span className="absolute inset-x-5 top-0 h-0.5 rounded-full bg-marquee" />}
+              {on && <span className="absolute inset-x-5 top-0 h-0.5 rounded-full bg-brand" />}
               {t.label}
             </button>
           )
