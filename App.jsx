@@ -25,23 +25,23 @@ export default function App() {
   }
 
   if (session === undefined) {
-    return <div className="grid h-full place-items-center bg-ink text-muted">불러오는 중…</div>
+    return <div className="grid h-full place-items-center bg-paper text-muted">불러오는 중…</div>
   }
   if (!session) return <Gate />
 
   if (!me) {
     return (
-      <div className="grid h-full place-items-center bg-ink px-6">
+      <div className="grid h-full place-items-center bg-paper px-6">
         <div className="w-full max-w-sm text-center">
-          <p className="font-mono text-xs uppercase tracking-[0.2em] text-marquee">who are you</p>
-          <h1 className="mt-2 text-2xl font-bold text-paper">나는 누구?</h1>
+          <p className="font-mono text-xs uppercase tracking-[0.2em] text-brand">who are you</p>
+          <h1 className="mt-2 text-2xl font-bold text-ink">나는 누구?</h1>
           <p className="mt-1 text-sm text-muted">입력·동의에 이름으로 남습니다</p>
           <div className="mt-6 grid grid-cols-2 gap-2">
             {MEMBERS.map((m) => (
               <button
                 key={m}
                 onClick={() => pickMe(m)}
-                className="rounded-xl border border-white/10 bg-white/5 py-3 text-paper transition hover:border-marquee hover:bg-white/10"
+                className="rounded-xl border border-line bg-card py-3 text-ink shadow-soft transition hover:border-brand hover:bg-sky"
               >
                 {m}
               </button>
@@ -60,7 +60,7 @@ export default function App() {
         <div className="flex items-center gap-2">
           <span className="text-sm font-bold tracking-tight text-ink">{APP_NAME}</span>
           {!isEditor && (
-            <span className="rounded-full bg-paper px-2 py-0.5 text-[10px] text-muted ring-1 ring-line">읽기 전용</span>
+            <span className="rounded-full bg-sky px-2 py-0.5 text-[10px] text-brand">읽기 전용</span>
           )}
         </div>
         <button onClick={() => pickMe('')} className="text-xs text-muted underline-offset-2 hover:underline">
