@@ -1,5 +1,5 @@
 // ── 앱 이름: 원하는 모임 이름으로 교체 ──
-export const APP_NAME = '우리 모임'
+export const APP_NAME = '죽팸 모임'
 
 // ── 고정 멤버 6명 ──
 export const MEMBERS = ['백성재', '김주원', '강정민', '최태진', '이용우', '박주호']
