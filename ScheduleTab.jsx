@@ -13,13 +13,18 @@ function daysFrom(s) {
   const ms = new Date(s + 'T00:00:00') - new Date(todayIso() + 'T00:00:00')
   return Math.round(ms / 86400000)
 }
+function normUrl(u) {
+  const s = (u || '').trim()
+  if (!s) return ''
+  return /^https?:\/\//i.test(s) ? s : `https://${s}`
+}
 
 export default function ScheduleTab({ me, isEditor }) {
   const today = new Date()
   const [cursor, setCursor] = useState(new Date(today.getFullYear(), today.getMonth(), 1))
   const [selected, setSelected] = useState(todayIso())
   const [events, setEvents] = useState([])
-  const [form, setForm] = useState({ title: '', memo: '', date: todayIso() })
+  const [form, setForm] = useState({ title: '', memo: '', date: todayIso(), links: [] })
   const [editId, setEditId] = useState(null)
   const [formOpen, setFormOpen] = useState(false)
 
@@ -54,15 +59,24 @@ export default function ScheduleTab({ me, isEditor }) {
     return cells
   }, [cursor])
 
-  function openAdd() { setEditId(null); setForm({ title: '', memo: '', date: selected }); setFormOpen(true) }
-  function openEdit(e) { setEditId(e.id); setForm({ title: e.title, memo: e.memo || '', date: e.date }); setFormOpen(true) }
-  function closeForm() { setFormOpen(false); setEditId(null); setForm({ title: '', memo: '', date: selected }) }
+  function openAdd() { setEditId(null); setForm({ title: '', memo: '', date: selected, links: [] }); setFormOpen(true) }
+  function openEdit(e) { setEditId(e.id); setForm({ title: e.title, memo: e.memo || '', date: e.date, links: e.links || [] }); setFormOpen(true) }
+  function closeForm() { setFormOpen(false); setEditId(null); setForm({ title: '', memo: '', date: selected, links: [] }) }
+
+  function addLink() { setForm((f) => ({ ...f, links: [...f.links, { label: '', url: '' }] })) }
+  function updateLink(i, key, val) { setForm((f) => ({ ...f, links: f.links.map((l, idx) => (idx === i ? { ...l, [key]: val } : l)) })) }
+  function removeLink(i) { setForm((f) => ({ ...f, links: f.links.filter((_, idx) => idx !== i) })) }
+
   async function save() {
     if (!form.title.trim()) return
+    const links = form.links
+      .map((l) => ({ label: (l.label || '').trim(), url: normUrl(l.url) }))
+      .filter((l) => l.url)
+    const payload = { title: form.title, memo: form.memo, date: form.date, links }
     if (editId) {
-      await supabase.from('schedules').update({ title: form.title, memo: form.memo, date: form.date }).eq('id', editId)
+      await supabase.from('schedules').update(payload).eq('id', editId)
     } else {
-      await supabase.from('schedules').insert({ date: form.date, title: form.title, memo: form.memo, created_by: me })
+      await supabase.from('schedules').insert({ ...payload, created_by: me })
     }
     closeForm(); load()
   }
@@ -77,14 +91,24 @@ export default function ScheduleTab({ me, isEditor }) {
     const n = daysFrom(e.date)
     const badge = n === 0 ? 'D-DAY' : `D-${n}`
     const left = n === 0 ? '오늘' : `${n}일 남음`
+    const links = e.links || []
     return (
-      <li className={`flex items-center justify-between gap-2 rounded-lg p-3 ${dim ? 'bg-paper' : 'bg-sky'}`}>
-        <div className="min-w-0">
+      <li className={`flex items-start justify-between gap-2 rounded-lg p-3 ${dim ? 'bg-paper' : 'bg-sky'}`}>
+        <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
             {!dim && <span className="shrink-0 rounded-md bg-brand px-1.5 py-0.5 text-[10px] font-bold text-white">{badge}</span>}
             <p className={`truncate text-sm font-medium ${dim ? 'text-muted' : 'text-ink'}`}>{e.title}</p>
           </div>
           <p className="mt-0.5 text-[11px] text-muted">{dateLabel(e.date)}{!dim ? ` · ${left}` : ''}{e.memo ? ` · ${e.memo}` : ''}</p>
+          {links.length > 0 && (
+            <div className="mt-2 flex flex-wrap gap-1.5">
+              {links.map((l, idx) => (
+                <a key={idx} href={l.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 rounded-md bg-card px-2 py-1 text-[11px] font-medium text-brand ring-1 ring-line transition hover:bg-white">
+                  {l.label || '링크'} <span aria-hidden="true">↗</span>
+                </a>
+              ))}
+            </div>
+          )}
         </div>
         {isEditor && (
           <div className="flex shrink-0 gap-2 text-xs">
@@ -114,6 +138,19 @@ export default function ScheduleTab({ me, isEditor }) {
             <input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} className="w-full rounded-lg border border-line px-3 py-2 text-sm text-ink outline-none focus:border-brand" />
             <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="제목 (예: 6월 정기모임)" className="w-full rounded-lg border border-line px-3 py-2 text-sm outline-none focus:border-brand" />
             <input value={form.memo} onChange={(e) => setForm({ ...form, memo: e.target.value })} placeholder="메모 (장소·시간 등, 선택)" className="w-full rounded-lg border border-line px-3 py-2 text-sm outline-none focus:border-brand" />
+
+            <div className="space-y-2 rounded-lg bg-paper p-2">
+              <p className="text-[11px] font-medium text-muted">링크 (숙박·장소 등, 선택)</p>
+              {form.links.map((l, i) => (
+                <div key={i} className="flex gap-1.5">
+                  <input value={l.label} onChange={(e) => updateLink(i, 'label', e.target.value)} placeholder="이름" className="w-20 shrink-0 rounded-lg border border-line px-2 py-2 text-sm outline-none focus:border-brand" />
+                  <input value={l.url} onChange={(e) => updateLink(i, 'url', e.target.value)} placeholder="주소 붙여넣기" className="min-w-0 flex-1 rounded-lg border border-line px-2 py-2 text-sm outline-none focus:border-brand" />
+                  <button onClick={() => removeLink(i)} className="shrink-0 rounded-lg border border-line px-2 text-sm text-muted">×</button>
+                </div>
+              ))}
+              <button onClick={addLink} className="w-full rounded-lg border border-dashed border-line py-1.5 text-xs text-brand">+ 링크 추가</button>
+            </div>
+
             <div className="flex gap-2">
               <button onClick={save} className="flex-1 rounded-lg bg-brand py-2 text-sm font-semibold text-white">{editId ? '수정 저장' : '추가'}</button>
               <button onClick={closeForm} className="rounded-lg border border-line px-3 text-sm text-muted">취소</button>
