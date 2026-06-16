@@ -1,45 +1,17 @@
-import { useState } from 'react'
-import { supabase, CLUB_EMAIL } from '../supabaseClient'
+// ── 앱 이름: 원하는 모임 이름으로 교체 ──
+export const APP_NAME = '우리 모임'
 
-export default function Gate() {
-  const [pw, setPw] = useState('')
-  const [err, setErr] = useState('')
-  const [busy, setBusy] = useState(false)
+// ── 고정 멤버 6명 ──
+export const MEMBERS = ['백성재', '김주원', '강정민', '최태진', '이용우', '박주호']
 
-  async function enter() {
-    if (!pw) return
-    setBusy(true); setErr('')
-    const { error } = await supabase.auth.signInWithPassword({ email: CLUB_EMAIL, password: pw })
-    setBusy(false)
-    if (error) setErr('암호가 맞지 않아요. 다시 입력해 주세요.')
-  }
+// 기록 권한자: 이 사람만 스케줄/사용내역 추가·수정·삭제 가능 (나머지는 읽기 전용)
+// ※ client-side 실수 방지용. 진짜 권한 잠금이 아님.
+export const EDITOR = '백성재'
 
-  return (
-    <div className="grid h-full place-items-center bg-ink px-6">
-      <div className="w-full max-w-sm">
-        <p className="font-mono text-xs uppercase tracking-[0.25em] text-marquee">members only</p>
-        <h1 className="mt-3 text-3xl font-bold text-paper">영화모임</h1>
-        <p className="mt-2 text-sm text-muted">모임 암호를 입력하면 들어갑니다.</p>
-
-        <input
-          type="password"
-          value={pw}
-          onChange={(e) => setPw(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && enter()}
-          placeholder="모임 암호"
-          autoFocus
-          className="mt-6 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-paper placeholder-muted outline-none focus:border-marquee"
-        />
-        {err && <p className="mt-2 text-sm text-minus">{err}</p>}
-
-        <button
-          onClick={enter}
-          disabled={busy}
-          className="mt-4 w-full rounded-xl bg-marquee py-3 font-semibold text-ink transition hover:brightness-105 disabled:opacity-50"
-        >
-          {busy ? '확인 중…' : '입장'}
-        </button>
-      </div>
-    </div>
-  )
-}
+// 탭 정의
+export const TABS = [
+  { id: 'guide',    label: '가이드' },
+  { id: 'rules',    label: '운영회칙' },
+  { id: 'schedule', label: '스케줄' },
+  { id: 'ledger',   label: '사용내역' },
+]

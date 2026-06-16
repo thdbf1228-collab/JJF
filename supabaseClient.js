@@ -1,14 +1,7 @@
-// ── 고정 멤버 6명 ──
-export const MEMBERS = ['백성재', '김주원', '강정민', '최태진', '이용우', '박주호']
+import { createClient } from '@supabase/supabase-js'
 
-// 기록 권한자: 이 사람만 스케줄/사용내역 추가·수정·삭제 가능 (나머지는 읽기 전용)
-// ※ client-side 실수 방지용. 진짜 권한 잠금이 아님.
-export const EDITOR = '백성재'
+const url = import.meta.env.VITE_SUPABASE_URL
+const key = import.meta.env.VITE_SUPABASE_ANON_KEY
 
-// 탭 정의 (와이어프레임 순서)
-export const TABS = [
-  { id: 'guide',    label: '가이드' },
-  { id: 'rules',    label: '운영회칙' },
-  { id: 'schedule', label: '스케줄' },
-  { id: 'ledger',   label: '사용내역' },
-]
+export const supabase = createClient(url, key)
+export const CLUB_EMAIL = import.meta.env.VITE_CLUB_EMAIL

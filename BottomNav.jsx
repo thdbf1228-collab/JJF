@@ -1,26 +1,21 @@
-/** @type {import('tailwindcss').Config} */
-export default {
-  content: ['./index.html', './src/**/*.{js,jsx}'],
-  theme: {
-    extend: {
-      colors: {
-        ink: '#1A1714',
-        paper: '#FBF8F2',
-        card: '#FFFFFF',
-        line: '#EAE3D7',
-        muted: '#8C8377',
-        marquee: '#E0A82E',   // amber accent (cinema marquee)
-        plus: '#2E7D5B',      // 입금
-        minus: '#C2492E',     // 지출
-      },
-      fontFamily: {
-        sans: ['Pretendard', 'system-ui', 'sans-serif'],
-        mono: ['"DM Mono"', 'ui-monospace', 'monospace'],
-      },
-      boxShadow: {
-        soft: '0 1px 2px rgba(26,23,20,.04), 0 8px 24px rgba(26,23,20,.06)',
-      },
-    },
-  },
-  plugins: [],
+export default function BottomNav({ tabs, active, onChange }) {
+  return (
+    <nav className="fixed inset-x-0 bottom-0 mx-auto max-w-md border-t border-line bg-card/95 pb-[env(safe-area-inset-bottom)] backdrop-blur">
+      <div className="grid grid-cols-4">
+        {tabs.map((t) => {
+          const on = t.id === active
+          return (
+            <button
+              key={t.id}
+              onClick={() => onChange(t.id)}
+              className={`relative py-3 text-sm transition ${on ? 'text-ink font-semibold' : 'text-muted'}`}
+            >
+              {on && <span className="absolute inset-x-5 top-0 h-0.5 rounded-full bg-marquee" />}
+              {t.label}
+            </button>
+          )
+        })}
+      </div>
+    </nav>
+  )
 }
